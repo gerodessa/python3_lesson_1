@@ -3,6 +3,8 @@
 import string
 # тут лежат регулярные выражения похоже на sql
 import re
+# для приведения слов к первой форме
+import pymorphy2
 text = open('texst_lesson_3.txt', 'r', encoding='UTF-8')  # Для винды обязательно писать кодировку иначе ошибка
 text_1 = text.read()
 '''проверка прочтения текста. '''
@@ -32,16 +34,24 @@ arr_3 = text_2.split()
 # не знаю для питона слово с большой буквы и маленькой одинаковые или нет, поэтому в нагрузку уменьшу регистр
 arr_3 = list(map(lambda m: m.lower(), arr_3))
 print(arr_3)
+# приведение слов к первой форме
+arr_4 = []
+morph = pymorphy2.MorphAnalyzer()
+for arr_3 in arr_3:
+    p = morph.parse(arr_3)[0]
+    arr_4.append(p.normal_form)
+print('приведение к 1 форме слова')
+print(arr_4)
 
 # заполняем словарь таким образом что бы посчитать количество слов в тексте.
-dict = {a: arr_3.count(a) for a in arr_3}
+dict = {a: arr_4.count(a) for a in arr_4}
 print(dict)
 # 5 наиболее встречающихся
 sort_list = list(dict.items())
-sort_list.sort(key=lambda i: i[1],reverse=True)
+sort_list.sort(key=lambda i: i[1], reverse=True)
 print('5 наиболее встречающихся')
 print(sort_list[:5])
 # Количество разных слов в тексте
-text_set = set(arr_3)
+text_set = set(arr_4)
 print('Количество разных слов в тексте')
 print(len(text_set))
